@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MyPreloader from "./components/MyPreloader.vue";
-
+import MyHeader from "./components/MyHeader.vue";
 import { onMounted } from "vue";
 
 onMounted(() => {
@@ -12,5 +12,6 @@ onMounted(() => {
 
 <template>
   <MyPreloader />
+  <MyHeader />
   <div class="h-screen">123</div>
 </template>
