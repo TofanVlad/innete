@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <header class="overflow-y-hidden h-[22.5vw]">
+  <header class="overflow-y-hidden h-[22.5vw] select-none pointer-events-none">
     <div class="absolute w-screen h-screen bg-primary bg-anim"></div>
 
     <h1

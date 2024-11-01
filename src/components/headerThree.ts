@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import TWEEN from "three/examples/jsm/libs/tween.module";
+import { ShallowRef, shallowRef } from 'vue';
 
 export function headerThree(canvas: HTMLCanvasElement): void {
     const w = canvas.offsetWidth
@@ -7,8 +8,8 @@ export function headerThree(canvas: HTMLCanvasElement): void {
 
     const scene = new THREE.Scene()
 
-    const camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 100);
-    camera.position.set(2, 7, 2);
+    const camera = new THREE.OrthographicCamera(-6, 6, 6, -6, 0.1, 100);
+    camera.position.set(1, 6.5, 1);
 
     scene.add(camera)
 
@@ -17,18 +18,23 @@ export function headerThree(canvas: HTMLCanvasElement): void {
 
     function initLight() {
         const ambientLight = new THREE.AmbientLight("#FFFFFF", 1);
-        const pointLight = new THREE.PointLight("#FFFFFF", 25, 15);
+        const pointLight = new THREE.PointLight("#FFFFFF", 25, 15, 1.5);
         pointLight.position.set(-1, 3, 0);
 
         scene.add(ambientLight);
         scene.add(pointLight);
     }
 
-    const raycastMeshes = []
-    const originalPositions = []
+    const pointLight = new THREE.PointLight('#ebebeb', 10, 0, 0.0)
+    scene.add(pointLight)
+
+    const raycastMeshes: THREE.Mesh[] = []
+    const originalPositions: { x: number, y: number, z: number }[] = []
+
+    const group = new THREE.Group()
 
     function initMeshes() {
-        const cubeGeometry = new THREE.BoxGeometry(5, 10, 1);
+        const cubeGeometry = new THREE.BoxGeometry(5, 7, 1);
         const cubeMaterial1 = new THREE.MeshPhongMaterial({
             color: "#282828",
         });
@@ -43,14 +49,13 @@ export function headerThree(canvas: HTMLCanvasElement): void {
         const mesh2 = new THREE.Mesh(cubeGeometry, cubeMaterial2);
         const mesh3 = new THREE.Mesh(cubeGeometry, cubeMaterial3);
 
-        mesh1.position.set(0, -4, 0)
-        mesh2.position.set(0, -4, 2)
-        mesh3.position.set(0, -4, -2)
+        mesh1.position.set(0, -2, 0)
+        mesh2.position.set(0, -2, 2)
+        mesh3.position.set(0, -2, -2)
         mesh3.rotateY((Math.PI * 15) / 180);
 
-        scene.add(mesh1);
-        scene.add(mesh2);
-        scene.add(mesh3);
+        group.add(mesh1, mesh2, mesh3)
+        scene.add(group);
         raycastMeshes.push(mesh1, mesh2, mesh3)
         originalPositions.push(mesh1.position.clone(), mesh2.position.clone(), mesh3.position.clone())
 
@@ -65,7 +70,7 @@ export function headerThree(canvas: HTMLCanvasElement): void {
 
         const plane = new THREE.Mesh(planeGeo, planeMat);
         plane.rotateX((Math.PI * 90) / 180);
-        plane.position.y = -4;
+        plane.position.y = -4.5;
         scene.add(plane);
 
         return plane
@@ -79,7 +84,8 @@ export function headerThree(canvas: HTMLCanvasElement): void {
 
     initLight()
     initMeshes()
-    scene.fog = new THREE.Fog(0xebebeb, 8, 10);
+    initPlane()
+    scene.fog = new THREE.Fog(0xebebeb, 7, 11);
 
     tick()
 
@@ -87,14 +93,18 @@ export function headerThree(canvas: HTMLCanvasElement): void {
 
     const pointer = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
-    const wasHoveredObjects = []
-    let hoveredObject = null
+    const wasHoveredObjects: THREE.Mesh[] = []
+    const hoveredObject: ShallowRef<THREE.Mesh | null> = shallowRef(null)
 
     function onMouseMove(event) {
         const rect = renderer.domElement.getBoundingClientRect();
 
         pointer.x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
         pointer.y = - ((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
+
+        pointLight.position.set(pointer.x * 4 - pointer.y * 4, 0, -pointer.x * 4 - pointer.y * 4)
+        group.rotation.y = ((Math.PI * (pointer.x * 2 - pointer.y * 2)) / 180)
+        group.position.set(pointer.x / 10 + pointer.y / 10, 0, -pointer.x / 10 + pointer.y / 10)
 
         raycaster.setFromCamera(pointer, camera);
 
@@ -111,8 +121,9 @@ export function headerThree(canvas: HTMLCanvasElement): void {
                             y: originalPositions[i].y,
                             z: originalPositions[i].z
                         },
-                        250
+                        450
                     )
+                    .easing(TWEEN.Easing.Elastic.Out)
                     .dynamic(true)
                     .start()
 
@@ -132,27 +143,29 @@ export function headerThree(canvas: HTMLCanvasElement): void {
         })
 
         if (intersects.length) {
-            const o = intersects[0].object
+            const obj = intersects[0].object
 
-            if (hoveredObject !== o)
-                if (hoveredObject !== null) {
-                    wasHoveredObjects.push(hoveredObject)
+            if (hoveredObject.value !== obj)
+                if (hoveredObject.value !== null) {
+                    wasHoveredObjects.push(hoveredObject.value)
                 }
-            hoveredObject = o
+            hoveredObject.value = obj
 
-            new TWEEN.Tween(o.position)
+            new TWEEN.Tween(obj.position)
                 .to(
                     {
-                        x: originalPositions[raycastMeshes.indexOf(o)].x,
-                        y: originalPositions[raycastMeshes.indexOf(o)].y + 1,
-                        z: originalPositions[raycastMeshes.indexOf(o)].z
+                        x: originalPositions[raycastMeshes.indexOf(obj)].x,
+                        y: originalPositions[raycastMeshes.indexOf(obj)].y + 1,
+                        z: originalPositions[raycastMeshes.indexOf(obj)].z
                     },
-                    250
+                    450
                 )
+                .easing(TWEEN.Easing.Elastic.Out)
+
                 .dynamic(true)
                 .start()
 
-            new TWEEN.Tween(o.material.color)
+            new TWEEN.Tween(obj.material.color)
                 .to(
                     {
                         r: 1,
@@ -166,9 +179,9 @@ export function headerThree(canvas: HTMLCanvasElement): void {
         }
         else {
             // no intersects so nothing should be coloured as if hovered
-            if (hoveredObject !== null) {
-                wasHoveredObjects.push(hoveredObject)
-                hoveredObject = null
+            if (hoveredObject.value !== null) {
+                wasHoveredObjects.push(hoveredObject.value)
+                hoveredObject.value = null
             }
         }
     }

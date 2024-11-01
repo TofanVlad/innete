@@ -6,14 +6,15 @@
 
 :root{
   interpolate-size: allow-keywords;
-  --primary: rgb(24, 24, 24);
+  --primary: #181818;
+  --secondary: #ebebeb;
 }
 
 body{
   font-family: "Manrope", serif;
   min-height: 100vh;
-  background-color: rgb(235, 235, 235);
+  background-color: #ebebeb;
   overflow-x: hidden;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
