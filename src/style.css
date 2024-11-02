@@ -13,8 +13,20 @@
 body{
   font-family: "Manrope", serif;
   min-height: 100vh;
-  background-color: #ebebeb;
+  background-color: var(--primary);
   overflow-x: hidden;
   /* overflow-y: hidden; */
+  
 }
+
+html{
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
 
