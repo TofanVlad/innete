@@ -5,11 +5,12 @@ import myNav from "./components/MyNav.vue";
 import myVideoSection from "./components/myVideoSection.vue";
 import { onMounted } from "vue";
 
-// onMounted(() => {
-//   setTimeout(() => {
-//     document.body.style.overflowY = "auto";
-//   }, 3500);
-// });
+
+onMounted(() => {
+  setTimeout(() => {
+    document.body.style.overflowY = "auto";
+  }, 3500);
+});
 </script>
 
 <template>
