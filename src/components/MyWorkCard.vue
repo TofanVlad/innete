@@ -31,8 +31,9 @@ onMounted(() => {
 
   container.value.addEventListener("mousemove", (e) => {
     const { xPercent, yPercent } = currsorPossitionInsideDiv(e);
-    const x = (xPercent / 2) * 0.5;
-    const y = (yPercent / 2) * 0.5;
+
+    const x = (xPercent - 50) * 0.5;
+    const y = (yPercent - 50) * 0.5;
     callAnimation(x, y);
   });
 
