@@ -27,7 +27,6 @@ onMounted(() => {
   });
 
   container.value.addEventListener("mouseleave", () => {
-    container.value!.style.transition = "transform";
     container.value!.style.transitionDuration = "600ms";
     container.value!.style.transform = `translate(0,0)`;
   });
@@ -40,7 +39,7 @@ onMounted(() => {
     :style="{
       'background-image': `url(${mainImage})`,
     }"
-    class="flex flex-col transition-[background] duration-300 max-w-[45%] object-scale-down group [background-position:center] bg-no-repeat [background-size:125%] backdrop-blur-sm hover:[background-size:145%] text-secondary"
+    class="flex flex-col transition-[background,transform] duration-300 max-w-[45%] object-scale-down group [background-position:center] bg-no-repeat [background-size:125%] backdrop-blur-sm hover:[background-size:145%] text-secondary"
   >
     <div
       class="relative w-full h-full p-4 overflow-hidden transition-all duration-300 group-hover:backdrop-blur-lg"

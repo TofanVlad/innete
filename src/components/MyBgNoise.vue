@@ -30,48 +30,48 @@
 
 @keyframes bg-animation {
   0% {
-    top: -50%;
+    top: 0%;
     left: 0%;
   }
   10% {
-    top: 25%;
-    left: 50%;
+    top: -25%;
+    left: -25%;
   }
   20% {
     top: -50%;
-    left: -100%;
-  }
-  30% {
-    top: 50%;
     left: -50%;
   }
+  30% {
+    top: -25%;
+    left: -75%;
+  }
   40% {
-    top: -75%;
+    top: -50%;
     left: 0%;
   }
   50% {
-    top: 50%;
-    left: 50%;
+    top: -30%;
+    left: -20%;
   }
   60% {
     top: -50%;
-    left: -100%;
+    left: -50%;
   }
   70% {
-    top: 25%;
-    left: 50%;
+    top: -50%;
+    left: 0%;
   }
   80% {
-    top: -50%;
-    left: -100%;
+    top: -55%;
+    left: -75%;
   }
   90% {
-    top: 50%;
+    top: -50%;
     left: -50%;
   }
   100% {
-    top: -35%;
-    left: 0%;
+    top: -25%;
+    left: -25%;
   }
 }
 </style>
