@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import anime from "animejs";
 
 const container = ref<HTMLElement | null>(null);
 defineProps<{
@@ -9,61 +10,59 @@ defineProps<{
   secondImage: string;
 }>();
 
+const currsorPossitionInsideDiv = (e: MouseEvent) => {
+  const { left, top, width, height } = container.value!.getBoundingClientRect();
+  const x = e.clientX - left;
+  const y = e.clientY - top;
+  const xPercent = (x / width) * 100;
+  const yPercent = (y / height) * 100;
+  return { xPercent, yPercent };
+};
+
+const callAnimation = (x: number, y: number) => {
+  anime({
+    targets: container.value, translateX: x, translateY: y, duration: 500, easing: "easeOutQuad",
+  });
+};
+
 onMounted(() => {
   if (!container.value) return;
 
-  container.value.addEventListener("mousemove", (event) => {
-    container.value!.style.transitionDuration = "0ms";
-    const cursorX =
-      (event.clientX - container.value!.offsetLeft) /
-        (container.value!.offsetWidth / 2) -
-      1;
 
-    const YMove = (-container.value!.clientHeight / 2 + event.clientY) / 8;
-
-    container.value!.style.transform = `translate(${
-      cursorX * 25
-    }px, ${YMove}px)`;
+  container.value.addEventListener("mousemove", (e) => {
+    const { xPercent, yPercent } = currsorPossitionInsideDiv(e);
+    const x = (xPercent / 2) * 0.5;
+    const y = (yPercent / 2) * 0.5;
+    callAnimation(x, y);
   });
 
   container.value.addEventListener("mouseleave", () => {
-    container.value!.style.transitionDuration = "600ms";
-    container.value!.style.transform = `translate(0,0)`;
+    callAnimation(0, 0);
   });
 });
 </script>
 
 <template>
-  <article
-    ref="container"
-    :style="{
-      'background-image': `url(${mainImage})`,
-    }"
-    class="flex flex-col transition-[background,transform] duration-300 max-w-[45%] object-scale-down group [background-position:center] bg-no-repeat [background-size:125%] backdrop-blur-sm hover:[background-size:145%] text-secondary"
-  >
-    <div
-      class="relative w-full h-full p-4 overflow-hidden transition-all duration-300 group-hover:backdrop-blur-lg"
-    >
-      <div
-        class="top-0 left-0 w-full h-full pointer-events-none noise-bg"
-      ></div>
+  <article ref="container" :style="{
+    'background-image': `url(${mainImage})`,
+  }"
+    class="flex flex-col max-w-[45%] object-scale-down group [background-position:center] bg-no-repeat [background-size:125%] backdrop-blur-sm text-secondary">
+    <div class="relative w-full h-full p-4 overflow-hidden transition-all duration-300 group-hover:backdrop-blur-lg">
+      <div class="top-0 left-0 w-full h-full pointer-events-none noise-bg"></div>
       <div class="sticky top-0">
         <h1 class="text-xl font-semibold tracking-wide w-max">{{ title }}</h1>
         <h2 class="text-lg font-medium w-max">{{ text }}</h2>
       </div>
       <div class="my-8 overflow-hidden aspect-video">
-        <img
-          :src="secondImage"
-          alt="secondImage"
-          class="w-full h-full translate-y-[105%] transition-all duration-300"
-        />
+        <img :src="secondImage" alt="secondImage"
+          class="w-full h-full translate-y-[105%] transition-all duration-300" />
       </div>
     </div>
   </article>
 </template>
 
 <style scoped>
-article:hover > div > .noise-bg {
+article:hover>div>.noise-bg {
   opacity: 0.9;
 }
 
@@ -79,8 +78,7 @@ article:hover * img {
   bottom: -50%;
   width: 200%;
   height: 200vh;
-  background: transparent
-    url("http://assets.iceable.com/img/noise-transparent.png") repeat 0 0;
+  background: transparent url("http://assets.iceable.com/img/noise-transparent.png") repeat 0 0;
   background-repeat: repeat;
   animation: bg-animation 0.2s infinite;
   background-size: 50%;
