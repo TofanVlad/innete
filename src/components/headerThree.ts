@@ -19,7 +19,7 @@ export function headerThree(canvas: HTMLCanvasElement): void {
     function initLight() {
         const ambientLight = new THREE.AmbientLight("#FFFFFF", 1);
         const pointLight = new THREE.PointLight("#FFFFFF", 25, 15, 1.5);
-        pointLight.position.set(-1, 3, 0);
+        pointLight.position.set(-1, 5, 0);
 
         scene.add(ambientLight);
         scene.add(pointLight);
