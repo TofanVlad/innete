@@ -19,7 +19,7 @@
   </header>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .text-translate {
   animation: textTranslate 0.75s forwards;
   animation-delay: 2500ms;

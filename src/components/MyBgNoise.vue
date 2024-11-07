@@ -15,8 +15,6 @@
   position: absolute;
   top: -50%;
   left: -50%;
-  right: -50%;
-  bottom: -50%;
   width: 200%;
   height: 200vh;
   background: transparent

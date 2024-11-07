@@ -12,7 +12,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section>
+  <section class="border-b border-black">
     <canvas ref="canvas" class="w-full h-full" />
   </section>
 </template>

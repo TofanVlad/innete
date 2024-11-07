@@ -1,6 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MyBgNoise from "./MyBgNoise.vue";
+</script>
 
 <template>
+  <myBgNoise />
   <footer class="flex flex-col px-8 overflow-hidden text-lg text-secondary">
     <img src="/inette.svg" alt="logo" class="w-12 -ml-3 aspect-square invert" />
     <div class="flex justify-between font-medium text-right">
